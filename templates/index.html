@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/static/js/jq.js"></script>
+		<script type="text/javascript" src="/static/js/jqm.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				last_key = 0
+				last_dir = "" 
+
+				$(document).keydown(function(event){
+					key = event.which
+					directions = {38:"forward", 40:"back", 39:"right", 37:"left"}
+					if(key == last_key || !directions[key])
+						return 
+					last_key = key
+					$.post("/robot",{action:"move",direction:directions[key]})
+					console.log(directions[key])
+				})
+
+				$(document).keyup(function(){
+					$.post("/robot",{action:"stop"})
+					last_key = 0
+				})
+
+				$(".direction").bind("vmousedown",function(){
+					direction = $(this).attr("direction")
+					$.post("/robot",{action:"move",direction:direction})
+					console.log(direction)
+				})
+
+				$(document).bind("vmouseup",function(){
+					$.post("/robot",{action:"stop"})
+					last_dir = ""
+				})
+			})
+		</script>
+	</head>
+	<body>
+	<img src="https://cdn4.iconfinder.com/data/icons/aiga-symbol-signs/434/aiga_uparrow-128.png" class="direction" direction="forward">
+
+
+	<img src="https://cdn0.iconfinder.com/data/icons/feather/96/591279-arrow-down-128.png" class="direction" direction="back">
+
+	<img src="https://cdn4.iconfinder.com/data/icons/wirecons-free-vector-icons/32/back-alt-128.png" class="direction" direction="left">
+	
+	<img src="https://cdn0.iconfinder.com/data/icons/feather/96/591276-arrow-right-128.png" class="direction" direction="right">
+	
+
+	</body>
+</html>
